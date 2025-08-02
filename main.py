@@ -11,7 +11,7 @@ def draw_one_cast(index, character_name, person_name, output_dir):
                 text=dedent("""
                     .number { 
                         font-family: Poppins; 
-                        font-size: 220px;
+                        font-size: 200px;
                         font-weight: 1000;
                         text-anchor: middle;
                         dominant-baseline: middle;
@@ -34,9 +34,9 @@ def draw_one_cast(index, character_name, person_name, output_dir):
                     }
                 """),
             ),
-            svg.Text(x=140, dy="22px", y=72.5, class_=["number"], text=index),
-            svg.Text(x=20, y=55, class_=["character"], text=character_name),
-            svg.Text(x=20, y=100, class_=["name"], text=person_name),
+            svg.Text(x=140, dy="22px", y=67.5, class_=["number"], text=index),
+            svg.Text(x=20, y=60, class_=["character"], text=character_name),
+            svg.Text(x=20, y=92, class_=["name"], text=person_name),
             svg.Rect(
                 x=0, y=70.5, width=50, height=.5,
                 fill="transparent", stroke="#2E2E2E", stroke_width=.5),
@@ -55,7 +55,7 @@ def draw_two_casts(index, character_name, person_one_name, person_two_name, cast
                 text=dedent("""
                     .number { 
                         font-family: Poppins; 
-                        font-size: 220px;
+                        font-size: 200px;
                         font-weight: 1000;
                         text-anchor: middle;
                         dominant-baseline: middle;
@@ -85,7 +85,7 @@ def draw_two_casts(index, character_name, person_one_name, person_two_name, cast
                     }
                 """),
             ),
-            svg.Text(x=140, dy="22px", y=72.5, class_=["number"], text=index),
+            svg.Text(x=140, dy="22px", y=67.5, class_=["number"], text=index),
             svg.Text(x=20, y=60, class_=["character"], text=character_name),
             svg.Text(x=20, y=88, class_=["cast"], text=cast_one_name),
             svg.Text(x=20, y=103, class_=["name"], text=person_one_name),
@@ -195,8 +195,8 @@ def generate_tags(data_frame, output_dir, one_or_two_cast):
     print(f"Creating {total_tags} tags...")
     
     if one_or_two_cast == "2":
-        cast_one_name = data_frame.columns[2]
-        cast_two_name = data_frame.columns[3]
+        cast_one_name = data_frame.columns[2].upper()
+        cast_two_name = data_frame.columns[3].upper()
         print(f"Cast one: {cast_one_name}, Cast two: {cast_two_name}")
 
     for _, row in data_frame.iterrows():
@@ -204,6 +204,9 @@ def generate_tags(data_frame, output_dir, one_or_two_cast):
             character_name = row.values[1]
             person_one_name = row.values[2]
             person_two_name = row.values[3]
+            
+            if person_two_name is None or type(person_two_name) is not str:
+                person_two_name = person_one_name
             
             if person_one_name == person_two_name:
                 draw_one_cast(mic_index, character_name, person_one_name, output_dir)

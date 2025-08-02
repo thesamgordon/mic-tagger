@@ -2,7 +2,7 @@ import svg
 from textwrap import dedent
 import pandas
 
-def drawOneCast(index, character_name, person_name, output_dir):
+def draw_one_cast(index, character_name, person_name, output_dir):
     image = svg.SVG(
         width=280,
         height=145,
@@ -46,7 +46,7 @@ def drawOneCast(index, character_name, person_name, output_dir):
     with open(f"{output_dir}/mic_tag_{index}.svg", "w") as f:
         f.write(image.as_str())
 
-def drawTwoCast(index, character_name, person_one_name, person_two_name, cast_one_name, cast_two_name, output_dir):
+def draw_two_casts(index, character_name, person_one_name, person_two_name, cast_one_name, cast_two_name, output_dir):
     image = svg.SVG(
         width=280,
         height=145,
@@ -206,13 +206,13 @@ def generate_tags(data_frame, output_dir, one_or_two_cast):
             person_two_name = row.values[3]
             
             if person_one_name == person_two_name:
-                drawOneCast(mic_index, character_name, person_one_name, output_dir)
+                draw_one_cast(mic_index, character_name, person_one_name, output_dir)
             else:
-                drawTwoCast(mic_index, character_name, person_one_name, person_two_name, cast_one_name, cast_two_name, output_dir)
+                draw_two_casts(mic_index, character_name, person_one_name, person_two_name, cast_one_name, cast_two_name, output_dir)
         else:
             character_name = row[1]
             person_name = row[2]
-            drawOneCast(mic_index, character_name, person_name, output_dir)
+            draw_one_cast(mic_index, character_name, person_name, output_dir)
 
         mic_index += 1
 

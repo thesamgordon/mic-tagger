@@ -5,30 +5,26 @@ def draw_one_cast(index, character_name, person_name, output_dir):
     with open(f"mic_tag_one_cast.svg", "r") as f:
         template = f.read()
 
-    image = template.format(
-        NUMBER=index,
-        CHARACTER=character_name,
-        PERSON=person_name
-    )
+    image = template.replace("{NUMBER}", str(index))
+    image = image.replace("{CHARACTER}", character_name)
+    image = image.replace("{PERSON}", person_name)
     
     with open(f"{output_dir}/mic_tag_{index}.svg", "w") as f:
-        f.write(image.as_str())
+        f.write(image)
 
 def draw_two_casts(index, character_name, person_one_name, person_two_name, cast_one_name, cast_two_name, output_dir):
     with open(f"mic_tag_two_cast.svg", "r") as f:
         template = f.read()
-
-    image = template.format(
-        NUMBER=index,
-        CHARACTER=character_name,
-        CAST_ONE=cast_one_name,
-        PERSON_ONE=person_one_name,
-        CAST_TWO=cast_two_name,
-        PERSON_TWO=person_two_name
-    )
-
+        
+    template = template.replace("{CAST_ONE}", cast_one_name)
+    template = template.replace("{CAST_TWO}", cast_two_name)
+    image = template.replace("{NUMBER}", str(index))
+    image = image.replace("{CHARACTER}", character_name)
+    image = image.replace("{PERSON_ONE}", person_one_name)
+    image = image.replace("{PERSON_TWO}", person_two_name)
+    
     with open(f"{output_dir}/mic_tag_{index}.svg", "w") as f:
-        f.write(image.as_str())
+        f.write(image)
     
 def locate_xlsx_files():
     return [file for file in os.listdir(".") if file.endswith(".xlsx")]
@@ -148,6 +144,17 @@ def generate_tags(data_frame, output_dir, one_or_two_cast):
         mic_index += 1
 
     print(f"\nCreated {total_tags} tags.")
+    
+    with open("index.html", "r") as f:
+        template = f.read()
+        
+    image_tags = ""
+    for i in range(1, mic_index):
+        image_tags += f'    <img src="output/mic_tag_{i}.svg" />\n'
+            
+    template = template.replace("{DATA}", image_tags)
+    with open("index.html", "w") as f:
+        f.write(template)
 
 def read_excel_data(xlsx_file, sheet_name, skiprows=0):
     try:

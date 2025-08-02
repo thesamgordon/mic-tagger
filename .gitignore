@@ -1,0 +1,7 @@
+pyvenv.cfg
+lib/
+include/
+bin/
+output/
+*.xlsx
+.DS_Store

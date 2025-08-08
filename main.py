@@ -153,7 +153,7 @@ def generate_tags(data_frame, output_dir, one_or_two_cast):
         image_tags += f'    <img src="output/mic_tag_{i}.svg" />\n'
             
     template = template.replace("{DATA}", image_tags)
-    with open("index.html", "w") as f:
+    with open(f"{output_dir}/index.html", "w") as f:
         f.write(template)
 
 def read_excel_data(xlsx_file, sheet_name, skiprows=0):

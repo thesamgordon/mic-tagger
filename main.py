@@ -150,7 +150,7 @@ def generate_tags(data_frame, output_dir, one_or_two_cast):
         
     image_tags = ""
     for i in range(1, mic_index):
-        image_tags += f'    <img src="output/mic_tag_{i}.svg" />\n'
+        image_tags += f'    <img src="mic_tag_{i}.svg" />\n'
             
     template = template.replace("{DATA}", image_tags)
     with open(f"{output_dir}/index.html", "w") as f:

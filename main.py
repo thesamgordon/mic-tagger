@@ -1,18 +1,19 @@
 import pandas
 import os
 
-def draw_one_cast(index, character_name, person_name, output_dir):
+def draw_one_cast(index, character_name, person_name, output_dir, title):
     with open(f"mic_tag_one_cast.svg", "r") as f:
         template = f.read()
 
     image = template.replace("{NUMBER}", str(index))
     image = image.replace("{CHARACTER}", character_name)
     image = image.replace("{PERSON}", person_name)
+    image = image.replace("{TITLE}", title)
     
     with open(f"{output_dir}/mic_tag_{index}.svg", "w") as f:
         f.write(image)
 
-def draw_two_casts(index, character_name, person_one_name, person_two_name, cast_one_name, cast_two_name, output_dir):
+def draw_two_casts(index, character_name, person_one_name, person_two_name, cast_one_name, cast_two_name, output_dir, title):
     with open(f"mic_tag_two_cast.svg", "r") as f:
         template = f.read()
         
@@ -22,6 +23,7 @@ def draw_two_casts(index, character_name, person_one_name, person_two_name, cast
     image = image.replace("{CHARACTER}", character_name)
     image = image.replace("{PERSON_ONE}", person_one_name)
     image = image.replace("{PERSON_TWO}", person_two_name)
+    image = image.replace("{TITLE}", title)
     
     with open(f"{output_dir}/mic_tag_{index}.svg", "w") as f:
         f.write(image)
@@ -96,6 +98,8 @@ def main():
         lambda x: x in ["1", "2"]
     )
 
+    title = get_user_input("Enter a title for the tags: ", "")
+    
     if one_or_two_cast == "1":
         print("Generating tags for one cast...")
     else:
@@ -110,9 +114,9 @@ def main():
     else:
         os.makedirs(output_dir)
 
-    generate_tags(data_frame, output_dir, one_or_two_cast)
+    generate_tags(data_frame, output_dir, one_or_two_cast, title)
 
-def generate_tags(data_frame, output_dir, one_or_two_cast):
+def generate_tags(data_frame, output_dir, one_or_two_cast, title):
     mic_index = 1
 
     total_tags = len(data_frame)
@@ -133,13 +137,13 @@ def generate_tags(data_frame, output_dir, one_or_two_cast):
                 person_two_name = person_one_name
             
             if person_one_name == person_two_name:
-                draw_one_cast(mic_index, character_name, person_one_name, output_dir)
+                draw_one_cast(mic_index, character_name, person_one_name, output_dir, title)
             else:
-                draw_two_casts(mic_index, character_name, person_one_name, person_two_name, cast_one_name, cast_two_name, output_dir)
+                draw_two_casts(mic_index, character_name, person_one_name, person_two_name, cast_one_name, cast_two_name, output_dir, title)
         else:
             character_name = row[1]
             person_name = row[2]
-            draw_one_cast(mic_index, character_name, person_name, output_dir)
+            draw_one_cast(mic_index, character_name, person_name, output_dir, title)
 
         mic_index += 1
 

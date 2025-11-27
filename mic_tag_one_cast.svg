@@ -37,6 +37,7 @@
     <text class="character" x="20" y="60">{CHARACTER}</text>
     <text class="name" x="20" y="92">{PERSON}</text>
     <text class="title" x="95%" y="95%" text-anchor="end" dominant-baseline="text-after-edge">
-        {TITLE}</text>
+        {TITLE}
+    </text>
     <rect stroke="#2E2E2E" stroke-width="0.5" x="0" y="70.5" width="50" height="0.5" fill="transparent" />
 </svg>

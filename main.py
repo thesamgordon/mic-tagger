@@ -2,7 +2,7 @@ import pandas
 import os
 
 def draw_one_cast(index, character_name, person_name, output_dir, title):
-    with open(f"mic_tag_one_cast.svg", "r") as f:
+    with open(f"mic_tag_one_cast_thin.svg", "r") as f:
         template = f.read()
 
     image = template.replace("{NUMBER}", str(index))
@@ -141,8 +141,9 @@ def generate_tags(data_frame, output_dir, one_or_two_cast, title):
             else:
                 draw_two_casts(mic_index, character_name, person_one_name, person_two_name, cast_one_name, cast_two_name, output_dir, title)
         else:
-            character_name = row[1]
-            person_name = row[2]
+            character_name = row.values[1]
+            person_name = row.values[2]        
+            
             draw_one_cast(mic_index, character_name, person_name, output_dir, title)
 
         mic_index += 1

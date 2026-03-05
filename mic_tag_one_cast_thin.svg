@@ -1,8 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="280" height="145">
+<svg xmlns="http://www.w3.org/2000/svg" width="280" height="70">
     <style>
         .number {
             font-family: Inter;
-            font-size: 200px;
+            font-size: 100px;
             font-weight: 900;
             text-anchor: middle;
             dominant-baseline: middle;
@@ -35,12 +35,11 @@
             fill: #4D0B4B;
             font-weight: 400;
             letter-spacing: -0.03em;
-
         }
     </style>
-    <text class="number" x="140" y="72" dy="22px">{NUMBER}</text>
-    <text class="character" x="20" y="69">{PERSON}</text>
-    <text class="name" x="20" y="86">{CHARACTER}</text>
+    <text class="number" x="215" y="23" dy="22px">{NUMBER}</text>
+    <text class="character" x="20" y="32">{PERSON}</text>
+    <text class="name" x="20" y="48">{CHARACTER}</text>
     <text class="title" x="97%" y="95%" text-anchor="end" dominant-baseline="text-after-edge">
         {TITLE}
     </text>

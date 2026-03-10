@@ -1,8 +1,8 @@
 import pandas
 import os
 
-def draw_one_cast(index, character_name, person_name, output_dir, title):
-    with open(f"mic_tag_one_cast_thin.svg", "r") as f:
+def draw_one_cast(index, character_name, person_name, output_dir, title, file_name):
+    with open(f"{file_name}.svg", "r") as f:
         template = f.read()
 
     image = template.replace("{NUMBER}", str(index))
@@ -10,11 +10,11 @@ def draw_one_cast(index, character_name, person_name, output_dir, title):
     image = image.replace("{PERSON}", person_name)
     image = image.replace("{TITLE}", title)
     
-    with open(f"{output_dir}/mic_tag_{index}.svg", "w") as f:
+    with open(f"{output_dir}/{file_name}_{index}.svg", "w") as f:
         f.write(image)
 
-def draw_two_casts(index, character_name, person_one_name, person_two_name, cast_one_name, cast_two_name, output_dir, title):
-    with open(f"mic_tag_two_cast.svg", "r") as f:
+def draw_two_casts(index, character_name, person_one_name, person_two_name, cast_one_name, cast_two_name, output_dir, title, file_name):
+    with open(file_name, "r") as f:
         template = f.read()
         
     template = template.replace("{CAST_ONE}", cast_one_name)
@@ -25,7 +25,7 @@ def draw_two_casts(index, character_name, person_one_name, person_two_name, cast
     image = image.replace("{PERSON_TWO}", person_two_name)
     image = image.replace("{TITLE}", title)
     
-    with open(f"{output_dir}/mic_tag_{index}.svg", "w") as f:
+    with open(f"{output_dir}/{file_name}_{index}.svg", "w") as f:
         f.write(image)
     
 def locate_xlsx_files():
@@ -114,9 +114,9 @@ def main():
     else:
         os.makedirs(output_dir)
 
-    generate_tags(data_frame, output_dir, one_or_two_cast, title)
+    generate_tags(data_frame, output_dir, one_or_two_cast, title, one_or_two_cast == "2" and "two_cast" or "one_cast")
 
-def generate_tags(data_frame, output_dir, one_or_two_cast, title):
+def generate_tags(data_frame, output_dir, one_or_two_cast, title, file_name):
     mic_index = 1
 
     total_tags = len(data_frame)
@@ -137,14 +137,15 @@ def generate_tags(data_frame, output_dir, one_or_two_cast, title):
                 person_two_name = person_one_name
             
             if person_one_name == person_two_name:
-                draw_one_cast(mic_index, character_name, person_one_name, output_dir, title)
+                draw_one_cast(mic_index, character_name, person_one_name, output_dir, title, "one_cast")
             else:
-                draw_two_casts(mic_index, character_name, person_one_name, person_two_name, cast_one_name, cast_two_name, output_dir, title)
+                draw_two_casts(mic_index, character_name, person_one_name, person_two_name, cast_one_name, cast_two_name, output_dir, title, "two_cast")
         else:
             character_name = row.values[1]
             person_name = row.values[2]        
             
-            draw_one_cast(mic_index, character_name, person_name, output_dir, title)
+            draw_one_cast(mic_index, character_name, person_name, output_dir, title, "one_cast")
+            draw_one_cast(mic_index, character_name, person_name, output_dir, title, "one_cast_thin")
 
         mic_index += 1
 
@@ -155,7 +156,12 @@ def generate_tags(data_frame, output_dir, one_or_two_cast, title):
         
     image_tags = ""
     for i in range(1, mic_index):
-        image_tags += f'    <img src="mic_tag_{i}.svg" />\n'
+        image_tags += f'      <img src="{file_name}_{i}.svg" />\n'
+
+    for i in range(1, mic_index):        
+        if os.path.exists(f"{output_dir}/{file_name}_thin_{i}.svg"):
+            image_tags += f'      <img src="{file_name}_thin_{i}.svg" />\n'
+              
             
     template = template.replace("{DATA}", image_tags)
     with open(f"{output_dir}/index.html", "w") as f:

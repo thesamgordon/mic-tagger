@@ -36,6 +36,7 @@
             font-weight: 400;
             letter-spacing: -0.03em;
         }
+        
     </style>
     <text class="number" x="215" y="23" dy="22px">{NUMBER}</text>
     <text class="character" x="20" y="32">{PERSON}</text>

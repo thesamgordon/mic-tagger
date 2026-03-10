@@ -7,7 +7,7 @@
             text-anchor: middle;
             dominant-baseline: middle;
             line-height: .5;
-            fill: rgba(105, 2, 2, .15);
+            fill: rgba(27,27,27,0.15);
             letter-spacing: -0.03em;
         }
 
@@ -16,7 +16,7 @@
             font-size: 18px;
             font-weight: 900;
             text-anchor: start;
-            fill: #4D0B4B;
+            fill: #242424;
             letter-spacing: -0.03em;
         }
 
@@ -25,14 +25,14 @@
             font-size: 15px;
             font-weight: 400;
             text-anchor: start;
-            fill: #4D0B4B;
+            fill: #242424;
             letter-spacing: -0.03em;
         }
 
         .title {
             font-family: Inter;
             font-size: 10px;
-            fill: #4D0B4B;
+            fill: #242424;
             font-weight: 400;
             letter-spacing: -0.03em;
 

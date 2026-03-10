@@ -1,44 +1,54 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="280" height="145">
     <style>
         .number {
-            font-family: Poppins;
+            font-family: Inter;
             font-size: 200px;
             font-weight: 1000;
             text-anchor: middle;
             dominant-baseline: middle;
             line-height: .5;
-            fill: #e0e0e0;
+            fill: rgba(27, 27, 27, 0.15);
+            letter-spacing: -0.03em;
+
         }
 
         .character {
-            font-family: Poppins;
+            font-family: Inter;
             font-size: 18px;
             font-weight: 1000;
             text-anchor: start;
             fill: #2E2E2E;
+            letter-spacing: -0.03em;
+
         }
 
         .name {
-            font-family: Poppins;
+            font-family: Inter;
             font-size: 15px;
             font-weight: 400;
             text-anchor: start;
             fill: #2E2E2E;
+            letter-spacing: -0.03em;
+
         }
 
         .cast {
-            font-family: Poppins;
+            font-family: Inter;
             font-size: 8px;
             font-weight: 700;
             text-anchor: start;
             fill: #7A7A7A;
+            letter-spacing: -0.03em;
+
         }
 
         .title {
-            font-family: Poppins;
+            font-family: Inter;
             font-size: 10px;
             fill: #2E2E2E;
-            font-weight: 300;
+            font-weight: 400;
+            letter-spacing: -0.03em;
+
         }
     </style>
     <text class="number" x="140" y="67.5" dy="22px">{NUMBER}</text>
@@ -50,5 +60,4 @@
     <text class="title" x="95%" y="95%" text-anchor="end" dominant-baseline="text-after-edge">
         {TITLE}
     </text>
-    <rect stroke="#2E2E2E" stroke-width="0.5" x="0" y="51.15" width="50" height="0.5" fill="transparent" />
 </svg>

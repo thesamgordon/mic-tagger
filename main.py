@@ -1,6 +1,9 @@
+import json
 import os
 
 import pandas
+
+CACHE_FILE = ".cache.json"
 
 
 def draw_one_cast(index, character_name, person_name, output_dir, title, file_name):
@@ -46,13 +49,31 @@ def locate_xlsx_files():
     return [file for file in os.listdir(".") if file.endswith(".xlsx")]
 
 
+def load_cache():
+    if os.path.exists(CACHE_FILE):
+        try:
+            with open(CACHE_FILE, "r") as f:
+                return json.load(f)
+        except (json.JSONDecodeError, OSError):
+            return {}
+    return {}
+
+
+def save_cache(cache):
+    try:
+        with open(CACHE_FILE, "w") as f:
+            json.dump(cache, f, indent=2)
+    except OSError as e:
+        print(f"Warning: could not save cache: {e}")
+
+
 def get_user_input(prompt, default, validation_func=None):
     while True:
         user_input = input(prompt)
+        if user_input == "":
+            return default
         if validation_func is None or validation_func(user_input) is True:
             return user_input
-        elif user_input == "":
-            return default
         else:
             print("Invalid input. Please try again.")
 
@@ -78,18 +99,24 @@ def read_excel_data(xlsx_file, sheet_name, skiprows=0):
         exit()
 
 
-def choose_xlsx_file(xlsx_files):
+def choose_xlsx_file(xlsx_files, cache):
     if len(xlsx_files) == 1:
         return xlsx_files[0]
 
+    default_file = cache.get("xlsx_file")
+    default_index = "1"
+    if default_file in xlsx_files:
+        default_index = str(xlsx_files.index(default_file) + 1)
+
     for i, xlsx_file in enumerate(xlsx_files):
-        print(f"{i + 1}. {xlsx_file}")
+        marker = " (last used)" if xlsx_file == default_file else ""
+        print(f"{i + 1}. {xlsx_file}{marker}")
 
     file_index = (
         int(
             get_user_input(
-                "Choose a file to generate snippets from (1): ",
-                "1",
+                f"Choose a file to generate snippets from ({default_index}): ",
+                default_index,
                 validate_int_input,
             )
         )
@@ -197,12 +224,14 @@ def generate_tags(data_frame, output_dir, one_or_two_cast, title, file_name):
 
 
 def main():
+    cache = load_cache()
+
     xlsx_files = locate_xlsx_files()
     if not xlsx_files:
         print("No xlsx files found in the current directory.")
         return
 
-    xlsx_file = choose_xlsx_file(xlsx_files)
+    xlsx_file = choose_xlsx_file(xlsx_files, cache)
     if xlsx_file is None:
         return
 
@@ -211,23 +240,42 @@ def main():
 
     print(f"Using file: {xlsx_file} ({show_file_name})")
     print(f"Sheet names: {xls.sheet_names}")
+
+    default_sheet = cache.get("sheet_name")
+    if default_sheet not in xls.sheet_names:
+        default_sheet = xls.sheet_names[0]
     sheet_name = get_user_input(
-        f"Select a sheet name (default: {xls.sheet_names[0]}): ",
-        xls.sheet_names[0],
+        f"Select a sheet name (default: {default_sheet}): ",
+        default_sheet,
         lambda x: x in xls.sheet_names,
     )
 
-    skip_rows = int(get_user_input("Start at row (1): ", "1", validate_int_input)) - 1
+    default_start_row = str(cache.get("start_row", 1))
+    skip_rows = (
+        int(
+            get_user_input(
+                f"Start at row ({default_start_row}): ",
+                default_start_row,
+                validate_int_input,
+            )
+        )
+        - 1
+    )
     if skip_rows < 0:
         skip_rows = 0
 
+    default_cast = cache.get("one_or_two_cast", "1")
     one_or_two_cast = get_user_input(
-        "Is this a one or two cast sheet? (1/2, default: 1): ",
-        "1",
+        f"Is this a one or two cast sheet? (1/2, default: {default_cast}): ",
+        default_cast,
         lambda x: x in ["1", "2"],
     )
 
-    title = get_user_input("Enter a title for the tags: ", "")
+    default_title = cache.get("title", "")
+    title = get_user_input(
+        f"Enter a title for the tags{f' (default: {default_title})' if default_title else ''}: ",
+        default_title,
+    )
 
     if one_or_two_cast == "1":
         print("Generating tags for one cast...")
@@ -246,6 +294,17 @@ def main():
         title,
         "two_cast" if one_or_two_cast == "2" else "one_cast",
     )
+
+    cache.update(
+        {
+            "xlsx_file": xlsx_file,
+            "sheet_name": sheet_name,
+            "start_row": skip_rows + 1,
+            "one_or_two_cast": one_or_two_cast,
+            "title": title,
+        }
+    )
+    save_cache(cache)
 
 
 if __name__ == "__main__":
